@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慈光基金會 - 大德芳名錄</title>
+    <meta name="description" content="慈光基金會大德捐款芳名錄，感謝所有捐款者的愛心支持">
+    <style>
+        :root {
+            --primary: #2c5f2d;
+            --primary-light: #4a8b4c;
+            --primary-dark: #1a3d1b;
+            --secondary: #d4a574;
+            --accent: #f0e68c;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e8f0e8 100%);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --text: #2d3436;
+            --text-light: #636e72;
+            --shadow: 0 8px 32px rgba(44, 95, 45, 0.12);
+            --shadow-hover: 0 12px 48px rgba(44, 95, 45, 0.2);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem 3rem;
+        }
+
+        /* Filter Section */
+        .filters {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            background: white;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15);
+        }
+
+        .filter-group input::placeholder {
+            color: #aaa;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f0f0f0;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        /* Table Container */
+        .table-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #eee;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .table-header h2 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .pagination-info {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s;
+        }
+
+        th:hover {
+            background: var(--primary-dark);
+        }
+
+        th::after {
+            content: '';
+            display: inline-block;
+            margin-left: 8px;
+            width: 0;
+            height: 0;
+        }
+
+        th.sort-asc::after {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 6px solid white;
+        }
+
+        th.sort-desc::after {
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid white;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(44, 95, 45, 0.05);
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: rgba(44, 95, 45, 0.05);
+        }
+
+        td {
+            padding: 0.875rem 1rem;
+        }
+
+        .amount {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .unit-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .unit-慈光基金會 {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .unit-慈馨兒少之家 {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .unit-慈馨少年家園 {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .purpose {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary);
+            background: white;
+            color: var(--primary);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: var(--primary);
+            color: white;
+        }
+
+        .pagination button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .page-input {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 1rem;
+        }
+
+        .page-input input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Loading & Empty State */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            color: var(--text-light);
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-light);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .stats-bar {
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 0.75rem 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            th,
+            td {
+                padding: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .unit-badge {
+                font-size: 0.75rem;
+                padding: 0.2rem 0.5rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+
+            header,
+            .filters,
+            .pagination,
+            footer {
+                display: none;
+            }
+
+            .table-container {
+                box-shadow: none;
+            }
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <h1>🙏 大德芳名錄</h1>
+        <p>慈光基金會 · 慈馨兒少之家 · 慈馨少年家園</p>
+    </header>
+
+
+    <div class="container">
+        <div class="filters">
+            <div class="filter-group">
+                <label for="search">🔍 搜尋姓名</label>
+                <input type="text" id="search" placeholder="輸入姓名關鍵字...">
+            </div>
+            <div class="filter-group">
+                <label for="unit">🏠 受贈單位</label>
+                <select id="unit">
+                    <option value="">全部單位</option>
+                    <option value="慈光基金會">慈光基金會</option>
+                    <option value="慈馨兒少之家">慈馨兒少之家</option>
+                    <option value="慈馨少年家園">慈馨少年家園</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <button class="btn btn-secondary" onclick="resetFilters()">清除篩選</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-header">
+                <h2>📜 捐款明細</h2>
+                <span class="pagination-info" id="pagination-info">載入中...</span>
+            </div>
+
+            <div class="table-wrapper">
+                <table id="donations-table">
+                    <thead>
+                        <tr>
+                            <th data-sort="日期">日期</th>
+                            <th data-sort="大德姓名">大德姓名</th>
+                            <th data-sort="金額">金額</th>
+                            <th data-sort="受贈單位">受贈單位</th>
+                            <th data-sort="指定用途">指定用途</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <tr>
+                            <td colspan="5">
+                                <div class="loading">
+                                    <div class="spinner"></div>
+                                    <span>正在載入資料...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <footer>
+        <p>💚 感謝所有大德的愛心支持 💚</p>
+        <p>資料更新日期：2025年11月27日</p>
+    </footer>
+
+    <script>
+        // Global state
+        let allData = [];
+        let filteredData = [];
+        let currentPage = 1;
+        let pageSize = 50;
+        let sortColumn = '日期';
+        let sortDirection = 'desc';
+
+        // Format number with commas
+        function formatNumber(num) {
+            return num.toLocaleString('zh-TW');
+        }
+
+        // Format currency
+        function formatCurrency(num) {
+            if (num >= 100000000) {
+                return (num / 100000000).toFixed(2) + ' 億';
+            } else if (num >= 10000) {
+                return (num / 10000).toFixed(0) + ' 萬';
+            }
+            return formatNumber(num);
+        }
+
+        // Parse ROC date for sorting
+        function parseROCDate(dateStr) {
+            if (!dateStr) return 0;
+            const match = dateStr.match(/(\d+)年(\d+)月(\d+)日/);
+            if (match) {
+                const year = parseInt(match[1]) + 1911;
+                const month = parseInt(match[2]);
+                const day = parseInt(match[3]);
+                return year * 10000 + month * 100 + day;
+            }
+            return 0;
+        }
+
+        // Load data
+        async function loadData() {
+            try {
+                const response = await fetch('donations.json');
+                allData = await response.json();
+                filteredData = [...allData];
+
+
+                sortData();
+                renderTable();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('table-body').innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <p>❌ 載入資料時發生錯誤</p>
+                                <p>請確認 donations.json 檔案存在</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+
+
+        // Filter data
+        function filterData() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const unit = document.getElementById('unit').value;
+
+            filteredData = allData.filter(d => {
+                if (searchTerm && !d.大德姓名.toLowerCase().includes(searchTerm)) return false;
+                if (unit && d.受贈單位 !== unit) return false;
+
+                return true;
+            });
+
+            currentPage = 1;
+
+            sortData();
+            renderTable();
+        }
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('search').value = '';
+            document.getElementById('unit').value = '';
+            filterData();
+        }
+
+        // Sort data
+        function sortData() {
+            filteredData.sort((a, b) => {
+                let aVal = a[sortColumn];
+                let bVal = b[sortColumn];
+
+                if (sortColumn === '日期') {
+                    aVal = parseROCDate(aVal);
+                    bVal = parseROCDate(bVal);
+                } else if (sortColumn === '金額') {
+                    aVal = aVal || 0;
+                    bVal = bVal || 0;
+                } else {
+                    aVal = (aVal || '').toString();
+                    bVal = (bVal || '').toString();
+                }
+
+                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        // Handle sort click
+        function handleSort(column) {
+            if (sortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortColumn = column;
+                sortDirection = 'desc';
+            }
+
+            // Update header styles
+            document.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+                if (th.dataset.sort === sortColumn) {
+                    th.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+                }
+            });
+
+            sortData();
+            renderTable();
+        }
+
+        // Render table
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageData = filteredData.slice(start, end);
+
+            if (pageData.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <p>😔 沒有符合條件的捐款記錄</p>
+                                <p>請嘗試調整篩選條件</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = pageData.map(d => `
+                    <tr>
+                        <td>${d.日期 || ''}</td>
+                        <td><strong>${d.大德姓名 || ''}</strong></td>
+                        <td class="amount">$${formatNumber(d.金額 || 0)}</td>
+                        <td><span class="unit-badge unit-${d.受贈單位}">${d.受贈單位 || ''}</span></td>
+                        <td class="purpose">${d.指定用途 || '-'}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Update pagination info
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            document.getElementById('pagination-info').textContent =
+                `顯示第 ${start + 1}-${Math.min(end, filteredData.length)} 筆，共 ${formatNumber(filteredData.length)} 筆`;
+
+            renderPagination(totalPages);
+        }
+
+        // Render pagination
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = `
+                <button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>首頁</button>
+                <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一頁</button>
+            `;
+
+            // Page numbers
+            const range = 2;
+            const start = Math.max(1, currentPage - range);
+            const end = Math.min(totalPages, currentPage + range);
+
+            if (start > 1) {
+                html += `<button onclick="goToPage(1)">1</button>`;
+                if (start > 2) html += `<span style="padding: 0.5rem;">...</span>`;
+            }
+
+            for (let i = start; i <= end; i++) {
+                html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+            }
+
+            if (end < totalPages) {
+                if (end < totalPages - 1) html += `<span style="padding: 0.5rem;">...</span>`;
+                html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+
+            html += `
+                <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一頁</button>
+                <button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>末頁</button>
+                <div class="page-input">
+                    <span>跳至</span>
+                    <input type="number" id="page-jump" min="1" max="${totalPages}" value="${currentPage}" onkeypress="if(event.key==='Enter')jumpToPage()">
+                    <span>/ ${totalPages} 頁</span>
+                </div>
+            `;
+
+            pagination.innerHTML = html;
+        }
+
+        // Go to page
+        function goToPage(page) {
+            const totalPages = Math.ceil(filteredData.length / pageSize);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderTable();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Jump to page
+        function jumpToPage() {
+            const page = parseInt(document.getElementById('page-jump').value);
+            goToPage(page);
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+
+            // Filter inputs
+            document.getElementById('search').addEventListener('input', debounce(filterData, 300));
+            document.getElementById('unit').addEventListener('change', filterData);
+
+
+            // Sort headers
+            document.querySelectorAll('th[data-sort]').forEach(th => {
+                th.addEventListener('click', () => handleSort(th.dataset.sort));
+            });
+        });
+
+        // Debounce helper
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+    </script>
+</body>
+
+</html>
