@@ -549,9 +549,10 @@
 
     <footer>
         <p>💚 感謝所有大德的愛心支持 💚</p>
-        <p>資料更新日期：2025年11月27日</p>
+        <p>資料更新日期：民國114年12月</p>
     </footer>
 
+    <script src="donations.js"></script>
     <script>
         // Global state
         let allData = [];
@@ -590,23 +591,20 @@
         }
 
         // Load data
-        async function loadData() {
-            try {
-                const response = await fetch('donations.json');
-                allData = await response.json();
+        function loadData() {
+            if (typeof donationsData !== 'undefined' && Array.isArray(donationsData)) {
+                allData = donationsData;
                 filteredData = [...allData];
-
-
                 sortData();
                 renderTable();
-            } catch (error) {
-                console.error('Error loading data:', error);
+            } else {
+                console.error('Error: donationsData not found');
                 document.getElementById('table-body').innerHTML = `
                     <tr>
                         <td colspan="5">
                             <div class="empty-state">
                                 <p>❌ 載入資料時發生錯誤</p>
-                                <p>請確認 donations.json 檔案存在</p>
+                                <p>請確認 donations.js 檔案存在</p>
                             </div>
                         </td>
                     </tr>
