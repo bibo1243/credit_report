@@ -1,595 +1,643 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>慈光基金會 - 大德芳名錄</title>
-    <meta name="description" content="慈光基金會大德捐款芳名錄，感謝所有捐款者的愛心支持">
+    <title>慈光基金會暨附設機構樂捐經費芳名錄</title>
+    <meta name="description" content="慈光基金會暨附設機構樂捐經費芳名錄，提供姓名快速查詢與芳名明細瀏覽">
     <style>
         :root {
-            --primary: #2c5f2d;
-            --primary-light: #4a8b4c;
-            --primary-dark: #1a3d1b;
-            --secondary: #d4a574;
-            --accent: #f0e68c;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e8f0e8 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text: #2d3436;
-            --text-light: #636e72;
-            --shadow: 0 8px 32px rgba(44, 95, 45, 0.12);
-            --shadow-hover: 0 12px 48px rgba(44, 95, 45, 0.2);
-            --border-radius: 16px;
+            --bg: #f6efe3;
+            --panel: rgba(255, 250, 242, 0.9);
+            --panel-strong: #fffdf8;
+            --line: rgba(122, 87, 38, 0.16);
+            --ink: #2c2214;
+            --muted: #746247;
+            --brand: #8a5a2b;
+            --brand-deep: #4c2f14;
+            --accent: #d6a35f;
+            --accent-soft: #f3e2c4;
+            --ok: #3d7d5c;
+            --shadow: 0 24px 54px rgba(77, 51, 20, 0.12);
+            --shadow-soft: 0 8px 24px rgba(77, 51, 20, 0.08);
+            --radius: 24px;
         }
 
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-gradient);
+            margin: 0;
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(214, 163, 95, 0.28), transparent 28%),
+                radial-gradient(circle at top right, rgba(138, 90, 43, 0.16), transparent 24%),
+                linear-gradient(180deg, #fdf9f2 0%, #f2e8da 100%);
             min-height: 100vh;
-            color: var(--text);
-            line-height: 1.6;
         }
 
-        /* Header */
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 2.5rem 1rem;
-            text-align: center;
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(143, 93, 44, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(143, 93, 44, 0.035) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .shell {
             position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            position: relative;
-        }
-
-        /* Stats Bar */
-        .stats-bar {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            padding: 1.5rem;
-            background: var(--card-bg);
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 1rem 2rem;
-            border-radius: var(--border-radius);
-            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: block;
-        }
-
-        .stat-label {
-            font-size: 0.9rem;
-            color: var(--text-light);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1400px;
+            width: min(1120px, calc(100% - 32px));
             margin: 0 auto;
-            padding: 0 1.5rem 3rem;
+            padding: 32px 0 48px;
         }
 
-        /* Filter Section */
-        .filters {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+        .hero,
+        .panel {
+            background: var(--panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.65);
             box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+
+        .hero {
+            padding: 40px 38px 34px;
+            overflow: hidden;
+            position: relative;
+            background:
+                linear-gradient(140deg, rgba(255, 252, 246, 0.98) 0%, rgba(249, 239, 222, 0.9) 100%);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            right: -120px;
+            top: -120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(214, 163, 95, 0.42), rgba(214, 163, 95, 0));
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: auto auto 24px 24px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(138, 90, 43, 0.12), rgba(138, 90, 43, 0));
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(138, 90, 43, 0.12), rgba(214, 163, 95, 0.18));
+            color: var(--brand-deep);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            box-shadow: var(--shadow-soft);
+        }
+
+        h1 {
+            margin: 18px 0 10px;
+            max-width: 920px;
+            font-size: clamp(24px, 3.2vw, 38px);
+            line-height: 1.2;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .hero-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 18px 0 10px;
+        }
+
+        .hero-title h1 {
+            margin: 0;
+        }
+
+        .hero-logo {
+            height: clamp(24px, 3.2vw, 38px);
+            width: auto;
+            flex: 0 0 auto;
+            object-fit: contain;
+        }
+
+        .hero p {
+            max-width: 800px;
+            margin: 0 0 6px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.85;
+        }
+
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .panel {
+            padding: 24px;
+            margin-top: 18px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) minmax(180px, 0.8fr) auto;
+            gap: 14px;
             align-items: end;
         }
 
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--brand-deep);
+            font-size: 14px;
+            font-weight: 700;
         }
 
-        .filter-group label {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.9rem;
+        input,
+        select,
+        button {
+            font: inherit;
         }
 
-        .filter-group input,
-        .filter-group select {
-            padding: 0.75rem 1rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background: white;
+        input,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.94);
+            color: var(--ink);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
         }
 
-        .filter-group input:focus,
-        .filter-group select:focus {
+        input:focus,
+        select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(44, 95, 45, 0.15);
+            border-color: rgba(143, 93, 44, 0.6);
+            box-shadow: 0 0 0 4px rgba(143, 93, 44, 0.12);
+            transform: translateY(-1px);
         }
 
-        .filter-group input::placeholder {
-            color: #aaa;
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
+        button {
+            border: 0;
+            border-radius: 16px;
+            padding: 14px 20px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
+        button:hover {
+            transform: translateY(-1px);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(44, 95, 45, 0.3);
+        .primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+            box-shadow: 0 14px 28px rgba(95, 59, 22, 0.24);
         }
 
-        .btn-secondary {
-            background: #f0f0f0;
-            color: var(--text);
+        .ghost {
+            color: var(--brand-deep);
+            background: linear-gradient(135deg, rgba(138, 90, 43, 0.08), rgba(214, 163, 95, 0.16));
         }
 
-        .btn-secondary:hover {
-            background: #e0e0e0;
+        .stat {
+            padding: 22px;
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 249, 239, 0.88));
+            border: 1px solid rgba(143, 93, 44, 0.1);
         }
 
-        /* Table Container */
-        .table-container {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
+        .stat small {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
         }
 
-        .table-header {
+        .stat strong {
+            display: block;
+            font-size: clamp(24px, 3vw, 34px);
+        }
+
+        #dateRange {
+            font-size: clamp(16px, 1.8vw, 24px);
+            line-height: 1.35;
+            white-space: nowrap;
+        }
+
+        .status {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 14px;
+            min-height: 22px;
+        }
+
+        .status.is-hidden,
+        .toolbar p.is-hidden {
+            display: none;
+        }
+
+        .toolbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 1.5rem;
-            border-bottom: 1px solid #eee;
+            gap: 12px;
             flex-wrap: wrap;
-            gap: 1rem;
+            margin-bottom: 18px;
         }
 
-        .table-header h2 {
-            color: var(--primary);
-            font-size: 1.2rem;
+        .toolbar h2 {
+            margin: 0;
+            font-size: 24px;
         }
 
-        .pagination-info {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .toolbar p {
+            margin: 6px 0 0;
+            color: var(--muted);
         }
 
-        /* Table */
-        .table-wrapper {
-            overflow-x: auto;
+        .count-badge {
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(138, 90, 43, 0.08), rgba(214, 163, 95, 0.18));
+            color: var(--brand-deep);
+            font-weight: 700;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        }
+
+        .results {
+            display: grid;
+            gap: 14px;
+        }
+
+        .result-card {
+            padding: 20px;
+            border: 1px solid rgba(143, 93, 44, 0.12);
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(252, 247, 239, 0.92));
+            box-shadow: var(--shadow-soft);
+        }
+
+        .result-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: start;
+            flex-wrap: wrap;
+        }
+
+        .result-name {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .result-name mark,
+        .table-name mark {
+            background: rgba(216, 165, 90, 0.45);
+            color: inherit;
+            padding: 0 0.15em;
+            border-radius: 0.2em;
+        }
+
+        .result-summary {
+            margin-top: 10px;
+            color: var(--muted);
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(143, 93, 44, 0.08);
+            color: var(--brand-deep);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border-radius: 20px;
+            border: 1px solid rgba(143, 93, 44, 0.1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 720px;
+            background: rgba(255, 255, 255, 0.82);
         }
 
-        thead {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-            color: white;
+        th,
+        td {
+            text-align: left;
+            padding: 15px 16px;
+            border-bottom: 1px solid rgba(143, 93, 44, 0.1);
+            vertical-align: top;
         }
 
         th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            white-space: nowrap;
-            cursor: pointer;
-            user-select: none;
-            transition: background 0.3s;
-        }
-
-        th:hover {
-            background: var(--primary-dark);
-        }
-
-        th::after {
-            content: '';
-            display: inline-block;
-            margin-left: 8px;
-            width: 0;
-            height: 0;
-        }
-
-        th.sort-asc::after {
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 6px solid white;
-        }
-
-        th.sort-desc::after {
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 6px solid white;
-        }
-
-        tbody tr {
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.2s;
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, #fffdf9 0%, #f8efe1 100%);
+            color: var(--brand-deep);
+            font-size: 14px;
+            z-index: 1;
         }
 
         tbody tr:hover {
-            background: rgba(44, 95, 45, 0.05);
+            background: rgba(216, 165, 90, 0.1);
         }
 
-        tbody tr:nth-child(even) {
-            background: rgba(0, 0, 0, 0.02);
-        }
-
-        tbody tr:nth-child(even):hover {
-            background: rgba(44, 95, 45, 0.05);
-        }
-
-        td {
-            padding: 0.875rem 1rem;
+        .table-name {
+            font-weight: 700;
         }
 
         .amount {
-            font-weight: 600;
-            color: var(--primary);
+            font-variant-numeric: tabular-nums;
+            color: var(--brand-deep);
+            font-weight: 700;
         }
 
-        .unit-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
+        .empty {
+            padding: 32px 18px;
+            text-align: center;
+            color: var(--muted);
+            line-height: 1.8;
         }
 
-        .unit-慈光基金會 {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .loader {
+            display: inline-flex;
+            width: 18px;
+            height: 18px;
+            border: 3px solid rgba(143, 93, 44, 0.18);
+            border-top-color: var(--brand);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
         }
 
-        .unit-慈馨兒少之家 {
-            background: #fff3e0;
-            color: #ef6c00;
+        .file-input {
+            margin-top: 14px;
+            display: none;
         }
 
-        .unit-慈馨少年家園 {
-            background: #e3f2fd;
-            color: #1565c0;
+        .file-input.is-visible {
+            display: block;
         }
 
-        .purpose {
-            color: var(--text-light);
-            font-size: 0.9rem;
+        .footnote {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            padding-top: 12px;
+            border-top: 1px solid rgba(138, 90, 43, 0.08);
         }
 
-        /* Pagination */
-        .pagination {
+        .pager {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.5rem;
-            padding: 1.5rem;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .pager-info {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .pager-buttons {
+            display: flex;
+            gap: 8px;
             flex-wrap: wrap;
         }
 
-        .pagination button {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--primary);
-            background: white;
-            color: var(--primary);
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
+        .pager-buttons button {
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(143, 93, 44, 0.1);
+            color: var(--brand-deep);
         }
 
-        .pagination button:hover:not(:disabled) {
-            background: var(--primary);
-            color: white;
-        }
-
-        .pagination button:disabled {
-            opacity: 0.4;
+        .pager-buttons button[disabled] {
+            opacity: 0.45;
             cursor: not-allowed;
+            transform: none;
         }
 
-        .pagination button.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        .page-input {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0 1rem;
-        }
-
-        .page-input input {
-            width: 60px;
-            padding: 0.5rem;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        /* Loading & Empty State */
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem;
-            color: var(--text-light);
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 1rem;
+        .pager-buttons button.active {
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+            color: #fff;
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            to { transform: rotate(360deg); }
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 4rem;
-            color: var(--text-light);
-        }
-
-        .empty-state svg {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-light);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-
-            .stats-bar {
-                gap: 1rem;
-            }
-
-            .stat-item {
-                padding: 0.75rem 1rem;
-            }
-
-            .stat-value {
-                font-size: 1.5rem;
-            }
-
-            .filters {
+        @media (max-width: 900px) {
+            .grid,
+            .search-row {
                 grid-template-columns: 1fr;
             }
 
-            th,
-            td {
-                padding: 0.75rem 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .unit-badge {
-                font-size: 0.75rem;
-                padding: 0.2rem 0.5rem;
+            .hero,
+            .panel {
+                padding: 22px;
             }
         }
 
-        /* Print styles */
-        @media print {
-
-            header,
-            .filters,
-            .pagination,
-            footer {
-                display: none;
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 20px, 1120px);
+                padding-top: 20px;
             }
 
-            .table-container {
-                box-shadow: none;
+            h1 {
+                font-size: 30px;
+            }
+
+            .result-name {
+                font-size: 19px;
             }
         }
     </style>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
 </head>
-
 <body>
-    <header>
-        <h1>🙏 大德芳名錄</h1>
-        <p>慈光基金會 · 慈馨兒少之家 · 慈馨少年家園</p>
-    </header>
-
-
-    <div class="container">
-        <div class="filters">
-            <div class="filter-group">
-                <label for="search">🔍 搜尋姓名</label>
-                <input type="text" id="search" placeholder="輸入姓名關鍵字...">
+    <main class="shell">
+        <section class="hero">
+            <div class="hero-title">
+                <img class="hero-logo" src="./logo.png" alt="慈光基金會 logo">
+                <h1>慈光基金會暨附設機構樂捐經費芳名錄</h1>
             </div>
-            <div class="filter-group">
-                <label for="unit">🏠 受贈單位</label>
-                <select id="unit">
-                    <option value="">全部單位</option>
-                    <option value="慈光基金會">慈光基金會</option>
-                    <option value="慈馨兒少之家">慈馨兒少之家</option>
-                    <option value="慈馨少年家園">慈馨少年家園</option>
-                </select>
+            <p>感謝 您的愛心樂助，因為 您的關懷，讓孩子充滿希望和力量，可以快樂的成長。</p>
+
+            <div class="grid">
+                <div class="stat">
+                    <small>資料期間</small>
+                    <strong id="dateRange">-</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="search-row">
+                <div>
+                    <label for="searchInput">搜尋姓名</label>
+                    <input id="searchInput" type="text" placeholder="例如：林、王小明、基金會、有限公司">
+                </div>
+                <div>
+                    <label for="unitFilter">受贈單位</label>
+                    <select id="unitFilter">
+                        <option value="">全部單位</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button class="primary" id="searchButton" type="button">立即搜尋</button>
+                    <button class="ghost" id="resetButton" type="button">清除</button>
+                </div>
             </div>
 
-            <div class="filter-group">
-                <button class="btn btn-secondary" onclick="resetFilters()">清除篩選</button>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <div class="table-header">
-                <h2>📜 捐款明細</h2>
-                <span class="pagination-info" id="pagination-info">載入中...</span>
+            <div class="file-input" id="filePanel">
+                <label for="jsonFile">手動載入 JSON</label>
+                <input id="jsonFile" type="file" accept=".json,application/json">
             </div>
 
-            <div class="table-wrapper">
-                <table id="donations-table">
+            <div class="status is-hidden" id="statusText"><span class="loader"></span>正在讀取資料...</div>
+        </section>
+
+        <section class="panel">
+            <div class="toolbar">
+                <div>
+                    <h2>搜尋結果</h2>
+                    <p id="summaryText" class="is-hidden">請先輸入姓名開始查詢。</p>
+                </div>
+                <div class="count-badge" id="matchCount">0 筆</div>
+            </div>
+
+            <div class="results" id="topMatches" style="margin-top:18px;"></div>
+
+            <div class="table-wrap" style="margin-top:18px;">
+                <table>
                     <thead>
                         <tr>
-                            <th data-sort="日期">日期</th>
-                            <th data-sort="大德姓名">大德姓名</th>
-                            <th data-sort="金額">金額</th>
-                            <th data-sort="受贈單位">受贈單位</th>
-                            <th data-sort="指定用途">指定用途</th>
+                            <th>日期</th>
+                            <th>姓名</th>
+                            <th>金額</th>
+                            <th>受贈單位</th>
+                            <th>指定用途</th>
                         </tr>
                     </thead>
-                    <tbody id="table-body">
+                    <tbody id="resultTable">
                         <tr>
-                            <td colspan="5">
-                                <div class="loading">
-                                    <div class="spinner"></div>
-                                    <span>正在載入資料...</span>
-                                </div>
-                            </td>
+                            <td colspan="5" class="empty">資料載入中...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="pagination" id="pagination"></div>
-        </div>
-    </div>
+            <div class="pager">
+                <div class="pager-info" id="pageInfo">目前第 1 頁</div>
+                <div class="pager-buttons" id="pagination"></div>
+            </div>
 
+<<<<<<< HEAD
     <footer>
         <p>💚 感謝所有大德的愛心支持 💚</p>
         <p>資料更新日期：民國114年12月</p>
     </footer>
 
     <script src="donations.js"></script>
+=======
+            <div class="footnote">預設會以日期由新到舊顯示。姓名搜尋採「包含關鍵字」比對，例如輸入「林」會找到所有包含「林」的姓名。</div>
+        </section>
+    </main>
+
+    <script src="./donations-data.js"></script>
+>>>>>>> afa76d1 (Update donation directory page)
     <script>
-        // Global state
-        let allData = [];
-        let filteredData = [];
-        let currentPage = 1;
-        let pageSize = 50;
-        let sortColumn = '日期';
-        let sortDirection = 'desc';
+        const state = {
+            rows: [],
+            filtered: [],
+            currentPage: 1,
+            pageSize: 20,
+        };
 
-        // Format number with commas
-        function formatNumber(num) {
-            return num.toLocaleString('zh-TW');
+        const refs = {
+            searchInput: document.getElementById("searchInput"),
+            unitFilter: document.getElementById("unitFilter"),
+            searchButton: document.getElementById("searchButton"),
+            resetButton: document.getElementById("resetButton"),
+            jsonFile: document.getElementById("jsonFile"),
+            filePanel: document.getElementById("filePanel"),
+            statusText: document.getElementById("statusText"),
+            dateRange: document.getElementById("dateRange"),
+            summaryText: document.getElementById("summaryText"),
+            matchCount: document.getElementById("matchCount"),
+            topMatches: document.getElementById("topMatches"),
+            resultTable: document.getElementById("resultTable"),
+            pageInfo: document.getElementById("pageInfo"),
+            pagination: document.getElementById("pagination"),
+        };
+
+        function formatAmount(value) {
+            return `$${Number(value || 0).toLocaleString("zh-TW")}`;
         }
 
-        // Format currency
-        function formatCurrency(num) {
-            if (num >= 100000000) {
-                return (num / 100000000).toFixed(2) + ' 億';
-            } else if (num >= 10000) {
-                return (num / 10000).toFixed(0) + ' 萬';
-            }
-            return formatNumber(num);
+        function rocDateToNumber(text) {
+            const match = String(text || "").match(/(\d+)年(\d+)月(\d+)日/);
+            if (!match) return 0;
+            const year = Number(match[1]) + 1911;
+            const month = Number(match[2]);
+            const day = Number(match[3]);
+            return year * 10000 + month * 100 + day;
         }
 
-        // Parse ROC date for sorting
-        function parseROCDate(dateStr) {
-            if (!dateStr) return 0;
-            const match = dateStr.match(/(\d+)年(\d+)月(\d+)日/);
-            if (match) {
-                const year = parseInt(match[1]) + 1911;
-                const month = parseInt(match[2]);
-                const day = parseInt(match[3]);
-                return year * 10000 + month * 100 + day;
-            }
-            return 0;
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         }
 
+<<<<<<< HEAD
         // Load data
         function loadData() {
             if (typeof donationsData !== 'undefined' && Array.isArray(donationsData)) {
@@ -610,202 +658,268 @@
                     </tr>
                 `;
             }
+=======
+        function highlightText(text, keyword) {
+            const safeText = escapeHtml(text);
+            if (!keyword) return safeText;
+
+            const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const pattern = new RegExp(escapedKeyword, "gi");
+            return safeText.replace(pattern, (match) => `<mark>${match}</mark>`);
+>>>>>>> afa76d1 (Update donation directory page)
         }
 
-
-
-        // Filter data
-        function filterData() {
-            const searchTerm = document.getElementById('search').value.toLowerCase();
-            const unit = document.getElementById('unit').value;
-
-            filteredData = allData.filter(d => {
-                if (searchTerm && !d.大德姓名.toLowerCase().includes(searchTerm)) return false;
-                if (unit && d.受贈單位 !== unit) return false;
-
-                return true;
-            });
-
-            currentPage = 1;
-
-            sortData();
-            renderTable();
+        function setStatus(message, isError = false) {
+            refs.statusText.innerHTML = isError ? escapeHtml(message) : message;
+            refs.statusText.style.color = isError ? "#a03d2b" : "";
         }
 
-        // Reset filters
-        function resetFilters() {
-            document.getElementById('search').value = '';
-            document.getElementById('unit').value = '';
-            filterData();
+        function normalizeRows(input) {
+            if (!Array.isArray(input)) return [];
+            return input
+                .filter((item) => item && typeof item === "object")
+                .map((item) => ({
+                    日期: item["日期"] || "",
+                    大德姓名: item["大德姓名"] || "",
+                    金額: Number(item["金額"] || 0),
+                    受贈單位: item["受贈單位"] || "",
+                    指定用途: item["指定用途"] || "",
+                }))
+                .filter((item) => item["大德姓名"]);
         }
 
-        // Sort data
-        function sortData() {
-            filteredData.sort((a, b) => {
-                let aVal = a[sortColumn];
-                let bVal = b[sortColumn];
-
-                if (sortColumn === '日期') {
-                    aVal = parseROCDate(aVal);
-                    bVal = parseROCDate(bVal);
-                } else if (sortColumn === '金額') {
-                    aVal = aVal || 0;
-                    bVal = bVal || 0;
-                } else {
-                    aVal = (aVal || '').toString();
-                    bVal = (bVal || '').toString();
-                }
-
-                if (aVal < bVal) return sortDirection === 'asc' ? -1 : 1;
-                if (aVal > bVal) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
-
-        // Handle sort click
-        function handleSort(column) {
-            if (sortColumn === column) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-            } else {
-                sortColumn = column;
-                sortDirection = 'desc';
-            }
-
-            // Update header styles
-            document.querySelectorAll('th').forEach(th => {
-                th.classList.remove('sort-asc', 'sort-desc');
-                if (th.dataset.sort === sortColumn) {
-                    th.classList.add(sortDirection === 'asc' ? 'sort-asc' : 'sort-desc');
-                }
-            });
-
-            sortData();
-            renderTable();
-        }
-
-        // Render table
-        function renderTable() {
-            const tbody = document.getElementById('table-body');
-            const start = (currentPage - 1) * pageSize;
-            const end = start + pageSize;
-            const pageData = filteredData.slice(start, end);
-
-            if (pageData.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state">
-                                <p>😔 沒有符合條件的捐款記錄</p>
-                                <p>請嘗試調整篩選條件</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            } else {
-                tbody.innerHTML = pageData.map(d => `
-                    <tr>
-                        <td>${d.日期 || ''}</td>
-                        <td><strong>${d.大德姓名 || ''}</strong></td>
-                        <td class="amount">$${formatNumber(d.金額 || 0)}</td>
-                        <td><span class="unit-badge unit-${d.受贈單位}">${d.受贈單位 || ''}</span></td>
-                        <td class="purpose">${d.指定用途 || '-'}</td>
-                    </tr>
-                `).join('');
-            }
-
-            // Update pagination info
-            const totalPages = Math.ceil(filteredData.length / pageSize);
-            document.getElementById('pagination-info').textContent =
-                `顯示第 ${start + 1}-${Math.min(end, filteredData.length)} 筆，共 ${formatNumber(filteredData.length)} 筆`;
-
-            renderPagination(totalPages);
-        }
-
-        // Render pagination
-        function renderPagination(totalPages) {
-            const pagination = document.getElementById('pagination');
-
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
+        function updateDatasetSummary() {
+            if (!state.rows.length) {
+                refs.dateRange.textContent = "-";
                 return;
             }
 
-            let html = `
-                <button onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>首頁</button>
-                <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>上一頁</button>
-            `;
+            const sortedDates = [...state.rows]
+                .map((row) => row["日期"])
+                .filter(Boolean)
+                .sort((a, b) => rocDateToNumber(a) - rocDateToNumber(b));
 
-            // Page numbers
-            const range = 2;
-            const start = Math.max(1, currentPage - range);
-            const end = Math.min(totalPages, currentPage + range);
-
-            if (start > 1) {
-                html += `<button onclick="goToPage(1)">1</button>`;
-                if (start > 2) html += `<span style="padding: 0.5rem;">...</span>`;
-            }
-
-            for (let i = start; i <= end; i++) {
-                html += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
-            }
-
-            if (end < totalPages) {
-                if (end < totalPages - 1) html += `<span style="padding: 0.5rem;">...</span>`;
-                html += `<button onclick="goToPage(${totalPages})">${totalPages}</button>`;
-            }
-
-            html += `
-                <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>下一頁</button>
-                <button onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>末頁</button>
-                <div class="page-input">
-                    <span>跳至</span>
-                    <input type="number" id="page-jump" min="1" max="${totalPages}" value="${currentPage}" onkeypress="if(event.key==='Enter')jumpToPage()">
-                    <span>/ ${totalPages} 頁</span>
-                </div>
-            `;
-
-            pagination.innerHTML = html;
+            refs.dateRange.textContent = `${sortedDates[0]} - ${sortedDates[sortedDates.length - 1]}`;
         }
 
-        // Go to page
-        function goToPage(page) {
-            const totalPages = Math.ceil(filteredData.length / pageSize);
-            if (page < 1 || page > totalPages) return;
-            currentPage = page;
-            renderTable();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function updateUnitOptions() {
+            const units = [...new Set(state.rows.map((row) => row["受贈單位"]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
+            refs.unitFilter.innerHTML = '<option value="">全部單位</option>' +
+                units.map((unit) => `<option value="${escapeHtml(unit)}">${escapeHtml(unit)}</option>`).join("");
         }
 
-        // Jump to page
-        function jumpToPage() {
-            const page = parseInt(document.getElementById('page-jump').value);
-            goToPage(page);
+        function renderTopMatches(keyword) {
+            if (!state.filtered.length || !keyword) {
+                refs.topMatches.innerHTML = "";
+                return;
+            }
+
+            const grouped = new Map();
+
+            for (const row of state.filtered) {
+                const key = row["大德姓名"];
+                if (!grouped.has(key)) {
+                    grouped.set(key, {
+                        name: key,
+                        count: 0,
+                        total: 0,
+                        latestDate: row["日期"] || "",
+                    });
+                }
+
+                const item = grouped.get(key);
+                item.count += 1;
+                item.total += Number(row["金額"] || 0);
+                if (rocDateToNumber(row["日期"]) > rocDateToNumber(item.latestDate)) {
+                    item.latestDate = row["日期"];
+                }
+            }
+
+            const top = [...grouped.values()]
+                .sort((a, b) => {
+                    if (b.count !== a.count) return b.count - a.count;
+                    if (b.total !== a.total) return b.total - a.total;
+                    return rocDateToNumber(b.latestDate) - rocDateToNumber(a.latestDate);
+                })
+                .slice(0, 6);
+
+            refs.topMatches.innerHTML = top.map((item) => `
+                <article class="result-card">
+                    <div class="result-head">
+                        <h3 class="result-name">${highlightText(item.name, keyword)}</h3>
+                        <span class="chip">共 ${item.count.toLocaleString("zh-TW")} 筆</span>
+                    </div>
+                    <div class="result-summary">累計金額 ${formatAmount(item.total)}</div>
+                    <div class="meta">
+                        <span class="chip">最近日期 ${escapeHtml(item.latestDate || "-")}</span>
+                    </div>
+                </article>
+            `).join("");
         }
 
-        // Event listeners
-        document.addEventListener('DOMContentLoaded', () => {
-            loadData();
+        function renderTable(keyword) {
+            if (!state.filtered.length) {
+                refs.pageInfo.textContent = "目前沒有資料";
+                refs.pagination.innerHTML = "";
+                refs.resultTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty">目前沒有符合的資料，請換個姓名關鍵字試試看。</td>
+                    </tr>
+                `;
+                return;
+            }
 
-            // Filter inputs
-            document.getElementById('search').addEventListener('input', debounce(filterData, 300));
-            document.getElementById('unit').addEventListener('change', filterData);
+            const totalPages = Math.max(1, Math.ceil(state.filtered.length / state.pageSize));
+            if (state.currentPage > totalPages) {
+                state.currentPage = totalPages;
+            }
 
+            const startIndex = (state.currentPage - 1) * state.pageSize;
+            const pageRows = state.filtered.slice(startIndex, startIndex + state.pageSize);
 
-            // Sort headers
-            document.querySelectorAll('th[data-sort]').forEach(th => {
-                th.addEventListener('click', () => handleSort(th.dataset.sort));
-            });
+            refs.resultTable.innerHTML = pageRows.map((row) => `
+                <tr>
+                    <td>${escapeHtml(row["日期"])}</td>
+                    <td class="table-name">${highlightText(row["大德姓名"], keyword)}</td>
+                    <td class="amount">${formatAmount(row["金額"])}</td>
+                    <td>${escapeHtml(row["受贈單位"])}</td>
+                    <td>${escapeHtml(row["指定用途"] || "-")}</td>
+                </tr>
+            `).join("");
+
+            const from = startIndex + 1;
+            const to = Math.min(startIndex + state.pageSize, state.filtered.length);
+            refs.pageInfo.textContent = `顯示第 ${from}-${to} 筆，共 ${state.filtered.length.toLocaleString("zh-TW")} 筆，第 ${state.currentPage} / ${totalPages} 頁`;
+            renderPagination(totalPages);
+        }
+
+        function renderPagination(totalPages) {
+            if (totalPages <= 1) {
+                refs.pagination.innerHTML = "";
+                return;
+            }
+
+            const pages = [];
+            pages.push(`
+                <button type="button" ${state.currentPage === 1 ? "disabled" : ""} data-page="${state.currentPage - 1}">
+                    上一頁
+                </button>
+            `);
+
+            const start = Math.max(1, state.currentPage - 2);
+            const end = Math.min(totalPages, state.currentPage + 2);
+
+            for (let i = start; i <= end; i += 1) {
+                pages.push(`
+                    <button type="button" class="${i === state.currentPage ? "active" : ""}" data-page="${i}">
+                        ${i}
+                    </button>
+                `);
+            }
+
+            pages.push(`
+                <button type="button" ${state.currentPage === totalPages ? "disabled" : ""} data-page="${state.currentPage + 1}">
+                    下一頁
+                </button>
+            `);
+
+            refs.pagination.innerHTML = pages.join("");
+        }
+
+        function runSearch() {
+            const keyword = refs.searchInput.value.trim();
+            const keywordLower = keyword.toLowerCase();
+            const unit = refs.unitFilter.value;
+
+            state.filtered = state.rows
+                .filter((row) => !keywordLower || row["大德姓名"].toLowerCase().includes(keywordLower))
+                .filter((row) => !unit || row["受贈單位"] === unit)
+                .sort((a, b) => rocDateToNumber(b["日期"]) - rocDateToNumber(a["日期"]));
+            state.currentPage = 1;
+
+            refs.matchCount.textContent = `${state.filtered.length.toLocaleString("zh-TW")} 筆`;
+
+            if (!keyword && !unit) {
+                refs.summaryText.textContent = `目前顯示全部資料，共 ${state.filtered.length.toLocaleString("zh-TW")} 筆。`;
+            } else if (keyword && unit) {
+                refs.summaryText.textContent = `姓名包含「${keyword}」且受贈單位為「${unit}」的結果如下。`;
+            } else if (keyword) {
+                refs.summaryText.textContent = `姓名包含「${keyword}」的結果如下。`;
+            } else {
+                refs.summaryText.textContent = `目前只顯示受贈單位為「${unit}」的資料。`;
+            }
+
+            renderTopMatches(keyword);
+            renderTable(keyword);
+        }
+
+        refs.pagination.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-page]");
+            if (!button || button.disabled) return;
+
+            const nextPage = Number(button.dataset.page);
+            if (!Number.isFinite(nextPage) || nextPage < 1) return;
+
+            state.currentPage = nextPage;
+            renderTable(refs.searchInput.value.trim());
         });
 
-        // Debounce helper
-        function debounce(func, wait) {
-            let timeout;
-            return function (...args) {
-                clearTimeout(timeout);
-                timeout = setTimeout(() => func.apply(this, args), wait);
-            };
+        function applyDataset(rows, sourceLabel) {
+            state.rows = normalizeRows(rows);
+            updateDatasetSummary();
+            updateUnitOptions();
+            runSearch();
+            setStatus(`資料已載入，共 ${state.rows.length.toLocaleString("zh-TW")} 筆，來源：${escapeHtml(sourceLabel)}。`);
         }
+
+        async function loadDefaultData() {
+            if (Array.isArray(window.__DONATIONS_DATA__) && window.__DONATIONS_DATA__.length) {
+                applyDataset(window.__DONATIONS_DATA__, "donations-data.js");
+                return;
+            }
+
+            try {
+                const response = await fetch("./donations.json");
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const rows = await response.json();
+                applyDataset(rows, "donations.json");
+            } catch (error) {
+                refs.filePanel.classList.add("is-visible");
+                setStatus("自動載入 donations.json 失敗，請在下方選取同資料夾內的 donations.json。", true);
+                refs.resultTable.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="empty">這通常是瀏覽器直接用檔案方式開啟頁面造成的限制。選取 JSON 後就可以正常搜尋。</td>
+                    </tr>
+                `;
+            }
+        }
+
+        refs.searchInput.addEventListener("input", runSearch);
+        refs.unitFilter.addEventListener("change", runSearch);
+        refs.searchButton.addEventListener("click", runSearch);
+        refs.resetButton.addEventListener("click", () => {
+            refs.searchInput.value = "";
+            refs.unitFilter.value = "";
+            runSearch();
+        });
+
+        refs.jsonFile.addEventListener("change", async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const rows = JSON.parse(text);
+                applyDataset(rows, file.name);
+            } catch (error) {
+                setStatus("讀取 JSON 失敗，請確認檔案內容是正確的 UTF-8 JSON。", true);
+            }
+        });
+
+        loadDefaultData();
     </script>
 </body>
-
 </html>
