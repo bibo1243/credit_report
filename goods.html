@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>慈光基金會暨附設機構物品芳名錄</title>
+    <meta name="description" content="慈光基金會暨附設機構物品芳名錄，提供姓名、物品名稱與受贈單位快速查詢">
+    <style>
+        :root {
+            --bg: #f6efe3;
+            --panel: rgba(255, 250, 242, 0.9);
+            --line: rgba(122, 87, 38, 0.16);
+            --ink: #2c2214;
+            --muted: #746247;
+            --brand: #8a5a2b;
+            --brand-deep: #4c2f14;
+            --shadow: 0 24px 54px rgba(77, 51, 20, 0.12);
+            --shadow-soft: 0 8px 24px rgba(77, 51, 20, 0.08);
+            --radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(214, 163, 95, 0.28), transparent 28%),
+                radial-gradient(circle at top right, rgba(138, 90, 43, 0.16), transparent 24%),
+                linear-gradient(180deg, #fdf9f2 0%, #f2e8da 100%);
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(143, 93, 44, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(143, 93, 44, 0.035) 1px, transparent 1px);
+            background-size: 28px 28px;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .shell {
+            position: relative;
+            width: min(1180px, calc(100% - 32px));
+            margin: 0 auto;
+            padding: 32px 0 48px;
+        }
+
+        .hero,
+        .panel {
+            background: var(--panel);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+
+        .hero {
+            padding: 40px 38px 34px;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(140deg, rgba(255, 252, 246, 0.98) 0%, rgba(249, 239, 222, 0.9) 100%);
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 340px;
+            height: 340px;
+            right: -120px;
+            top: -120px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(214, 163, 95, 0.42), rgba(214, 163, 95, 0));
+        }
+
+        .hero-title {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 18px 0 10px;
+        }
+
+        .hero-logo {
+            height: clamp(24px, 3.2vw, 38px);
+            width: auto;
+            flex: 0 0 auto;
+            object-fit: contain;
+        }
+
+        h1 {
+            margin: 0;
+            max-width: 980px;
+            font-size: clamp(24px, 3.2vw, 38px);
+            line-height: 1.2;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+
+        .hero p {
+            max-width: 840px;
+            margin: 0 0 6px;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.85;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr;
+            gap: 18px;
+            margin-top: 22px;
+        }
+
+        .panel {
+            padding: 24px;
+            margin-top: 18px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .stat {
+            padding: 22px;
+            border-radius: 22px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(255, 249, 239, 0.88));
+            border: 1px solid rgba(143, 93, 44, 0.1);
+        }
+
+        .stat small {
+            display: block;
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .stat strong {
+            display: block;
+            font-size: clamp(24px, 3vw, 34px);
+        }
+
+        #dateRange {
+            font-size: clamp(16px, 1.8vw, 24px);
+            line-height: 1.35;
+            white-space: nowrap;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(180px, 0.8fr) auto;
+            gap: 14px;
+            align-items: end;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--brand-deep);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        input,
+        select,
+        button {
+            font: inherit;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.94);
+            color: var(--ink);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: rgba(143, 93, 44, 0.6);
+            box-shadow: 0 0 0 4px rgba(143, 93, 44, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            border: 0;
+            border-radius: 16px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        .primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+            box-shadow: 0 14px 28px rgba(95, 59, 22, 0.24);
+        }
+
+        .ghost {
+            color: var(--brand-deep);
+            background: linear-gradient(135deg, rgba(138, 90, 43, 0.08), rgba(214, 163, 95, 0.16));
+        }
+
+        .status {
+            margin-top: 16px;
+            color: var(--muted);
+            font-size: 14px;
+            min-height: 22px;
+        }
+
+        .status.is-hidden,
+        .toolbar p.is-hidden {
+            display: none;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .toolbar h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .toolbar p {
+            margin: 6px 0 0;
+            color: var(--muted);
+        }
+
+        .count-badge {
+            padding: 12px 16px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, rgba(138, 90, 43, 0.08), rgba(214, 163, 95, 0.18));
+            color: var(--brand-deep);
+            font-weight: 700;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        }
+
+        .results {
+            display: grid;
+            gap: 14px;
+        }
+
+        .result-card {
+            padding: 20px;
+            border: 1px solid rgba(143, 93, 44, 0.12);
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(252, 247, 239, 0.92));
+            box-shadow: var(--shadow-soft);
+        }
+
+        .result-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: start;
+            flex-wrap: wrap;
+        }
+
+        .result-name {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .result-name mark,
+        .table-name mark,
+        .item-name mark {
+            background: rgba(216, 165, 90, 0.45);
+            color: inherit;
+            padding: 0 0.15em;
+            border-radius: 0.2em;
+        }
+
+        .result-summary {
+            margin-top: 10px;
+            color: var(--muted);
+        }
+
+        .meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(143, 93, 44, 0.08);
+            color: var(--brand-deep);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .table-wrap {
+            overflow: auto;
+            border-radius: 20px;
+            border: 1px solid rgba(143, 93, 44, 0.1);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 880px;
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        th,
+        td {
+            text-align: left;
+            padding: 15px 16px;
+            border-bottom: 1px solid rgba(143, 93, 44, 0.1);
+            vertical-align: top;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            background: linear-gradient(180deg, #fffdf9 0%, #f8efe1 100%);
+            color: var(--brand-deep);
+            font-size: 14px;
+            z-index: 1;
+        }
+
+        tbody tr:hover {
+            background: rgba(216, 165, 90, 0.1);
+        }
+
+        .table-name {
+            font-weight: 700;
+        }
+
+        .item-name {
+            color: var(--brand-deep);
+            font-weight: 700;
+        }
+
+        .qty {
+            font-variant-numeric: tabular-nums;
+            color: var(--brand-deep);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .empty {
+            padding: 32px 18px;
+            text-align: center;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .file-input {
+            margin-top: 14px;
+            display: none;
+        }
+
+        .file-input.is-visible {
+            display: block;
+        }
+
+        .pager {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .pager-info {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .pager-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pager-buttons button {
+            padding: 10px 14px;
+            border-radius: 12px;
+            background: rgba(143, 93, 44, 0.1);
+            color: var(--brand-deep);
+        }
+
+        .pager-buttons button[disabled] {
+            opacity: 0.45;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .pager-buttons button.active {
+            background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
+            color: #fff;
+        }
+
+        .footnote {
+            margin-top: 18px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            padding-top: 12px;
+            border-top: 1px solid rgba(138, 90, 43, 0.08);
+        }
+
+        @media (max-width: 900px) {
+            .grid,
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero,
+            .panel {
+                padding: 22px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .shell {
+                width: min(100% - 20px, 1180px);
+                padding-top: 20px;
+            }
+
+            h1 {
+                font-size: 30px;
+                white-space: normal;
+            }
+
+            .result-name {
+                font-size: 19px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="shell">
+        <section class="hero">
+            <div class="hero-title">
+                <img class="hero-logo" src="./logo.png" alt="慈光基金會 logo">
+                <h1>慈光基金會暨附設機構物品芳名錄</h1>
+            </div>
+            <p>感謝 您的愛心捐贈，因為 您的支持與關懷，讓孩子與家庭獲得更多照顧與力量。</p>
+
+            <div class="grid">
+                <div class="stat">
+                    <small>資料期間</small>
+                    <strong id="dateRange">-</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="search-row">
+                <div>
+                    <label for="nameSearchInput">搜尋姓名</label>
+                    <input id="nameSearchInput" type="text" placeholder="例如：林、王小明、基金會、有限公司">
+                </div>
+                <div>
+                    <label for="itemSearchInput">搜尋物品名稱</label>
+                    <input id="itemSearchInput" type="text" placeholder="例如：白米、泡芙、餅乾、衛生紙">
+                </div>
+                <div>
+                    <label for="unitFilter">受贈單位</label>
+                    <select id="unitFilter">
+                        <option value="">全部單位</option>
+                    </select>
+                </div>
+                <div class="actions">
+                    <button class="primary" id="searchButton" type="button">立即搜尋</button>
+                    <button class="ghost" id="resetButton" type="button">清除</button>
+                </div>
+            </div>
+
+            <div class="file-input" id="filePanel">
+                <label for="jsonFile">手動載入 JSON</label>
+                <input id="jsonFile" type="file" accept=".json,application/json">
+            </div>
+
+            <div class="status is-hidden" id="statusText">資料載入中...</div>
+        </section>
+
+        <section class="panel">
+            <div class="toolbar">
+                <div>
+                    <h2>搜尋結果</h2>
+                    <p id="summaryText" class="is-hidden">請先輸入姓名或物品名稱開始查詢。</p>
+                </div>
+                <div class="count-badge" id="matchCount">0 筆</div>
+            </div>
+
+            <div class="results" id="topMatches" style="margin-top:18px;"></div>
+
+            <div class="table-wrap" style="margin-top:18px;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>日期</th>
+                            <th>姓名</th>
+                            <th>物品名稱</th>
+                            <th>數量</th>
+                            <th>單位</th>
+                            <th>受贈單位</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultTable">
+                        <tr>
+                            <td colspan="6" class="empty">資料載入中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pager">
+                <div class="pager-info" id="pageInfo">目前第 1 頁</div>
+                <div class="pager-buttons" id="pagination"></div>
+            </div>
+
+            <div class="footnote">支援姓名、物品名稱與受贈單位交叉查詢，明細預設依日期由新到舊排列，每頁顯示 20 筆。</div>
+        </section>
+    </main>
+
+    <script src="./goods-data.js"></script>
+    <script>
+        const state = {
+            rows: [],
+            filtered: [],
+            currentPage: 1,
+            pageSize: 20,
+        };
+
+        const refs = {
+            nameSearchInput: document.getElementById("nameSearchInput"),
+            itemSearchInput: document.getElementById("itemSearchInput"),
+            unitFilter: document.getElementById("unitFilter"),
+            searchButton: document.getElementById("searchButton"),
+            resetButton: document.getElementById("resetButton"),
+            jsonFile: document.getElementById("jsonFile"),
+            filePanel: document.getElementById("filePanel"),
+            statusText: document.getElementById("statusText"),
+            dateRange: document.getElementById("dateRange"),
+            summaryText: document.getElementById("summaryText"),
+            matchCount: document.getElementById("matchCount"),
+            topMatches: document.getElementById("topMatches"),
+            resultTable: document.getElementById("resultTable"),
+            pageInfo: document.getElementById("pageInfo"),
+            pagination: document.getElementById("pagination"),
+        };
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function highlightText(text, keyword) {
+            const safeText = escapeHtml(text);
+            if (!keyword) return safeText;
+
+            const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            const pattern = new RegExp(escapedKeyword, "gi");
+            return safeText.replace(pattern, (match) => `<mark>${match}</mark>`);
+        }
+
+        function rocDateToNumber(text) {
+            const match = String(text || "").match(/(\d+)[\/年.-](\d+)[\/月.-](\d+)/);
+            if (!match) return 0;
+            const year = Number(match[1]) + 1911;
+            const month = Number(match[2]);
+            const day = Number(match[3]);
+            return year * 10000 + month * 100 + day;
+        }
+
+        function normalizeQuantity(value) {
+            if (value === null || value === undefined) return "";
+            if (typeof value === "number") {
+                if (Number.isInteger(value)) return String(value);
+                return String(value);
+            }
+            return String(value).trim();
+        }
+
+        function setStatus(message, isError = false) {
+            refs.statusText.innerHTML = isError ? escapeHtml(message) : message;
+            refs.statusText.style.color = isError ? "#a03d2b" : "";
+        }
+
+        function normalizeRows(input) {
+            if (!Array.isArray(input)) return [];
+            return input
+                .filter((item) => item && typeof item === "object")
+                .map((item) => ({
+                    日期: item["日期"] || "",
+                    大德姓名: item["大德姓名"] || "",
+                    物品名稱: item["物品名稱"] || "",
+                    數量: normalizeQuantity(item["數量"]),
+                    單位: item["單位"] || "",
+                    受贈單位: item["受贈單位"] || "",
+                }))
+                .filter((item) => item["大德姓名"] || item["物品名稱"]);
+        }
+
+        function updateDatasetSummary() {
+            if (!state.rows.length) {
+                refs.dateRange.textContent = "-";
+                return;
+            }
+
+            const sortedDates = [...state.rows]
+                .map((row) => row["日期"])
+                .filter(Boolean)
+                .sort((a, b) => rocDateToNumber(a) - rocDateToNumber(b));
+
+            refs.dateRange.textContent = `${sortedDates[0]} - ${sortedDates[sortedDates.length - 1]}`;
+        }
+
+        function updateUnitOptions() {
+            const units = [...new Set(state.rows.map((row) => row["受贈單位"]).filter(Boolean))].sort((a, b) => a.localeCompare(b, "zh-Hant"));
+            refs.unitFilter.innerHTML = '<option value="">全部單位</option>' +
+                units.map((unit) => `<option value="${escapeHtml(unit)}">${escapeHtml(unit)}</option>`).join("");
+        }
+
+        function renderTopMatches(nameKeyword, itemKeyword) {
+            if (!state.filtered.length || (!nameKeyword && !itemKeyword)) {
+                refs.topMatches.innerHTML = "";
+                return;
+            }
+
+            const grouped = new Map();
+
+            for (const row of state.filtered) {
+                const key = row["大德姓名"] || row["物品名稱"];
+                if (!grouped.has(key)) {
+                    grouped.set(key, {
+                        name: row["大德姓名"] || "-",
+                        itemCount: 0,
+                        rowCount: 0,
+                        latestDate: row["日期"] || "",
+                    });
+                }
+
+                const item = grouped.get(key);
+                item.rowCount += 1;
+                item.itemCount += 1;
+                if (rocDateToNumber(row["日期"]) > rocDateToNumber(item.latestDate)) {
+                    item.latestDate = row["日期"];
+                }
+            }
+
+            const top = [...grouped.values()]
+                .sort((a, b) => {
+                    if (b.rowCount !== a.rowCount) return b.rowCount - a.rowCount;
+                    return rocDateToNumber(b.latestDate) - rocDateToNumber(a.latestDate);
+                })
+                .slice(0, 6);
+
+            refs.topMatches.innerHTML = top.map((item) => `
+                <article class="result-card">
+                    <div class="result-head">
+                        <h3 class="result-name">${highlightText(item.name, nameKeyword)}</h3>
+                        <span class="chip">共 ${item.rowCount.toLocaleString("zh-TW")} 筆</span>
+                    </div>
+                    <div class="result-summary">符合物品紀錄 ${item.itemCount.toLocaleString("zh-TW")} 筆</div>
+                    <div class="meta">
+                        <span class="chip">最近日期 ${escapeHtml(item.latestDate || "-")}</span>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function renderPagination(totalPages) {
+            if (totalPages <= 1) {
+                refs.pagination.innerHTML = "";
+                return;
+            }
+
+            const pages = [];
+            pages.push(`
+                <button type="button" ${state.currentPage === 1 ? "disabled" : ""} data-page="${state.currentPage - 1}">
+                    上一頁
+                </button>
+            `);
+
+            const start = Math.max(1, state.currentPage - 2);
+            const end = Math.min(totalPages, state.currentPage + 2);
+
+            for (let i = start; i <= end; i += 1) {
+                pages.push(`
+                    <button type="button" class="${i === state.currentPage ? "active" : ""}" data-page="${i}">
+                        ${i}
+                    </button>
+                `);
+            }
+
+            pages.push(`
+                <button type="button" ${state.currentPage === totalPages ? "disabled" : ""} data-page="${state.currentPage + 1}">
+                    下一頁
+                </button>
+            `);
+
+            refs.pagination.innerHTML = pages.join("");
+        }
+
+        function renderTable(nameKeyword, itemKeyword) {
+            if (!state.filtered.length) {
+                refs.pageInfo.textContent = "目前沒有資料";
+                refs.pagination.innerHTML = "";
+                refs.resultTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">目前沒有符合的資料，請換個姓名或物品名稱試試看。</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const totalPages = Math.max(1, Math.ceil(state.filtered.length / state.pageSize));
+            if (state.currentPage > totalPages) {
+                state.currentPage = totalPages;
+            }
+
+            const startIndex = (state.currentPage - 1) * state.pageSize;
+            const pageRows = state.filtered.slice(startIndex, startIndex + state.pageSize);
+
+            refs.resultTable.innerHTML = pageRows.map((row) => `
+                <tr>
+                    <td>${escapeHtml(row["日期"])}</td>
+                    <td class="table-name">${highlightText(row["大德姓名"], nameKeyword)}</td>
+                    <td class="item-name">${highlightText(row["物品名稱"], itemKeyword)}</td>
+                    <td class="qty">${escapeHtml(row["數量"])}</td>
+                    <td>${escapeHtml(row["單位"] || "-")}</td>
+                    <td>${escapeHtml(row["受贈單位"] || "-")}</td>
+                </tr>
+            `).join("");
+
+            const from = startIndex + 1;
+            const to = Math.min(startIndex + state.pageSize, state.filtered.length);
+            refs.pageInfo.textContent = `顯示第 ${from}-${to} 筆，共 ${state.filtered.length.toLocaleString("zh-TW")} 筆，第 ${state.currentPage} / ${totalPages} 頁`;
+            renderPagination(totalPages);
+        }
+
+        function runSearch() {
+            const nameKeyword = refs.nameSearchInput.value.trim();
+            const nameKeywordLower = nameKeyword.toLowerCase();
+            const itemKeyword = refs.itemSearchInput.value.trim();
+            const itemKeywordLower = itemKeyword.toLowerCase();
+            const unit = refs.unitFilter.value;
+
+            state.filtered = state.rows
+                .filter((row) => !nameKeywordLower || row["大德姓名"].toLowerCase().includes(nameKeywordLower))
+                .filter((row) => !itemKeywordLower || row["物品名稱"].toLowerCase().includes(itemKeywordLower))
+                .filter((row) => !unit || row["受贈單位"] === unit)
+                .sort((a, b) => rocDateToNumber(b["日期"]) - rocDateToNumber(a["日期"]));
+            state.currentPage = 1;
+
+            refs.matchCount.textContent = `${state.filtered.length.toLocaleString("zh-TW")} 筆`;
+
+            renderTopMatches(nameKeyword, itemKeyword);
+            renderTable(nameKeyword, itemKeyword);
+        }
+
+        refs.pagination.addEventListener("click", (event) => {
+            const button = event.target.closest("button[data-page]");
+            if (!button || button.disabled) return;
+
+            const nextPage = Number(button.dataset.page);
+            if (!Number.isFinite(nextPage) || nextPage < 1) return;
+
+            state.currentPage = nextPage;
+            renderTable(refs.nameSearchInput.value.trim(), refs.itemSearchInput.value.trim());
+        });
+
+        function applyDataset(rows, sourceLabel) {
+            state.rows = normalizeRows(rows);
+            updateDatasetSummary();
+            updateUnitOptions();
+            runSearch();
+            setStatus(`資料已載入，共 ${state.rows.length.toLocaleString("zh-TW")} 筆，來源：${escapeHtml(sourceLabel)}。`);
+        }
+
+        async function loadDefaultData() {
+            if (Array.isArray(window.__GOODS_DATA__) && window.__GOODS_DATA__.length) {
+                applyDataset(window.__GOODS_DATA__, "goods-data.js");
+                return;
+            }
+
+            try {
+                const response = await fetch("./goods.json");
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const rows = await response.json();
+                applyDataset(rows, "goods.json");
+            } catch (error) {
+                refs.filePanel.classList.add("is-visible");
+                setStatus("自動載入 goods.json 失敗，請在下方選取同資料夾內的 goods.json。", true);
+                refs.resultTable.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty">這通常是瀏覽器直接用檔案方式開啟頁面造成的限制。選取 JSON 後就可以正常搜尋。</td>
+                    </tr>
+                `;
+            }
+        }
+
+        refs.nameSearchInput.addEventListener("input", runSearch);
+        refs.itemSearchInput.addEventListener("input", runSearch);
+        refs.unitFilter.addEventListener("change", runSearch);
+        refs.searchButton.addEventListener("click", runSearch);
+        refs.resetButton.addEventListener("click", () => {
+            refs.nameSearchInput.value = "";
+            refs.itemSearchInput.value = "";
+            refs.unitFilter.value = "";
+            runSearch();
+        });
+
+        refs.jsonFile.addEventListener("change", async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const rows = JSON.parse(text);
+                applyDataset(rows, file.name);
+            } catch (error) {
+                setStatus("讀取 JSON 失敗，請確認檔案內容是正確的 UTF-8 JSON。", true);
+            }
+        });
+
+        loadDefaultData();
+    </script>
+</body>
+</html>
