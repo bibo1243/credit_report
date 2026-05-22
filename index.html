@@ -576,20 +576,11 @@
                 <div class="pager-buttons" id="pagination"></div>
             </div>
 
-<<<<<<< HEAD
-    <footer>
-        <p>💚 感謝所有大德的愛心支持 💚</p>
-        <p>資料更新日期：民國114年12月</p>
-    </footer>
-
-    <script src="donations.js"></script>
-=======
             <div class="footnote">預設會以日期由新到舊顯示。姓名搜尋採「包含關鍵字」比對，例如輸入「林」會找到所有包含「林」的姓名。</div>
         </section>
     </main>
 
     <script src="./donations-data.js"></script>
->>>>>>> afa76d1 (Update donation directory page)
     <script>
         const state = {
             rows: [],
@@ -637,28 +628,6 @@
                 .replace(/'/g, "&#39;");
         }
 
-<<<<<<< HEAD
-        // Load data
-        function loadData() {
-            if (typeof donationsData !== 'undefined' && Array.isArray(donationsData)) {
-                allData = donationsData;
-                filteredData = [...allData];
-                sortData();
-                renderTable();
-            } else {
-                console.error('Error: donationsData not found');
-                document.getElementById('table-body').innerHTML = `
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state">
-                                <p>❌ 載入資料時發生錯誤</p>
-                                <p>請確認 donations.js 檔案存在</p>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            }
-=======
         function highlightText(text, keyword) {
             const safeText = escapeHtml(text);
             if (!keyword) return safeText;
@@ -666,7 +635,6 @@
             const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
             const pattern = new RegExp(escapedKeyword, "gi");
             return safeText.replace(pattern, (match) => `<mark>${match}</mark>`);
->>>>>>> afa76d1 (Update donation directory page)
         }
 
         function setStatus(message, isError = false) {
