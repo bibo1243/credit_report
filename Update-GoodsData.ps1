@@ -47,6 +47,52 @@ function Get-LatestExcelFile {
     return $file.FullName
 }
 
+function Resolve-ShortcutTarget {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return $null
+    }
+
+    $shell = $null
+    $shortcut = $null
+
+    try {
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($Path)
+        return $shortcut.TargetPath
+    }
+    finally {
+        foreach ($comObject in @($shortcut, $shell)) {
+            if ($null -ne $comObject) {
+                [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($comObject)
+            }
+        }
+    }
+}
+
+function Get-LatestShortcutTarget {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Directory
+    )
+
+    $shortcuts = Get-ChildItem -LiteralPath $Directory -File -Filter "*.lnk" |
+        Sort-Object LastWriteTime -Descending
+
+    foreach ($shortcut in $shortcuts) {
+        $targetPath = Resolve-ShortcutTarget -Path $shortcut.FullName
+        if ($targetPath -and [System.IO.Path]::GetExtension($targetPath).ToLowerInvariant() -eq ".xlsx") {
+            return $targetPath
+        }
+    }
+
+    return $null
+}
+
 function Normalize-Header {
     param(
         [string]$Value
@@ -138,7 +184,13 @@ $recipientKey = Decode-Utf8Base64 "5Y+X6LSI5Zau5L2N"
 $requiredHeaders = @($dateKey, $nameKey, $itemKey, $quantityKey, $unitKey, $recipientKey)
 
 if (-not $ExcelPath) {
-    $ExcelPath = Get-LatestExcelFile -Directory $ExcelDirectory
+    $shortcutTarget = Get-LatestShortcutTarget -Directory $ExcelDirectory
+    if ($shortcutTarget -and (Test-Path -LiteralPath $shortcutTarget)) {
+        $ExcelPath = $shortcutTarget
+    }
+    else {
+        $ExcelPath = Get-LatestExcelFile -Directory $ExcelDirectory
+    }
 }
 
 if (-not (Test-Path -LiteralPath $ExcelPath)) {
