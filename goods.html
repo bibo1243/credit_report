@@ -805,20 +805,31 @@
         }
 
         async function loadDefaultData() {
+            const remoteUrl = "https://raw.githubusercontent.com/bibo1243/credit_report/main/goods.json";
+            const localUrl = "./goods.json";
+            const urls = [`${remoteUrl}?v=${Date.now()}`, `${localUrl}?v=${Date.now()}`];
+
+            for (const url of urls) {
+                try {
+                    const response = await fetch(url, { cache: "no-store" });
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const rows = await response.json();
+                    applyDataset(rows, url.includes("raw.githubusercontent.com") ? "GitHub raw goods.json" : "goods.json");
+                    return;
+                }
+                catch (error) {
+                }
+            }
+
             if (Array.isArray(window.__GOODS_DATA__) && window.__GOODS_DATA__.length) {
                 applyDataset(window.__GOODS_DATA__, "goods-data.js");
                 return;
             }
 
             try {
-                const response = await fetch("./goods.json");
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const rows = await response.json();
-                applyDataset(rows, "goods.json");
-            } catch (error) {
                 refs.filePanel.classList.add("is-visible");
                 setStatus("自動載入 goods.json 失敗，請在下方選取同資料夾內的 goods.json。", true);
                 refs.resultTable.innerHTML = `
@@ -826,6 +837,7 @@
                         <td colspan="6" class="empty">這通常是瀏覽器直接用檔案方式開啟頁面造成的限制。選取 JSON 後就可以正常搜尋。</td>
                     </tr>
                 `;
+            } catch (error) {
             }
         }
 
