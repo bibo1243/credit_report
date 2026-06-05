@@ -841,20 +841,30 @@
         }
 
         async function loadDefaultData() {
+            const remoteUrl = "https://raw.githubusercontent.com/bibo1243/credit_report/main/donations.json";
+            const localUrl = "./donations.json";
+            const urls = [`${remoteUrl}?v=${Date.now()}`, `${localUrl}?v=${Date.now()}`];
+
+            for (const url of urls) {
+                try {
+                    const response = await fetch(url, { cache: "no-store" });
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const rows = await response.json();
+                    applyDataset(rows, url.includes("raw.githubusercontent.com") ? "GitHub raw donations.json" : "donations.json");
+                    return;
+                } catch (error) {
+                }
+            }
+
             if (Array.isArray(window.__DONATIONS_DATA__) && window.__DONATIONS_DATA__.length) {
                 applyDataset(window.__DONATIONS_DATA__, "donations-data.js");
                 return;
             }
 
-            try {
-                const response = await fetch("./donations.json");
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const rows = await response.json();
-                applyDataset(rows, "donations.json");
-            } catch (error) {
+            {
                 refs.filePanel.classList.add("is-visible");
                 setStatus("自動載入 donations.json 失敗，請在下方選取同資料夾內的 donations.json。", true);
                 refs.resultTable.innerHTML = `

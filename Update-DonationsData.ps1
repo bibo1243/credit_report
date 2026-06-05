@@ -1,5 +1,6 @@
 param(
     [string]$ExcelPath,
+    [string]$ExcelDirectory = "E:\OneDrive - tkcy\AI",
     [string]$JsonPath = (Join-Path $PSScriptRoot "donations.json"),
     [string]$JsPath = (Join-Path $PSScriptRoot "donations-data.js")
 )
@@ -40,10 +41,79 @@ function Get-LatestExcelFile {
         Select-Object -First 1
 
     if (-not $file) {
-        throw "No Excel file (*.xlsx) was found in this folder."
+        throw "No Excel file (*.xlsx) was found in the source folder."
     }
 
     return $file.FullName
+}
+
+function Resolve-ShortcutTarget {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return $null
+    }
+
+    $shell = $null
+    $shortcut = $null
+
+    try {
+        $shell = New-Object -ComObject WScript.Shell
+        $shortcut = $shell.CreateShortcut($Path)
+        return $shortcut.TargetPath
+    }
+    finally {
+        foreach ($comObject in @($shortcut, $shell)) {
+            if ($null -ne $comObject) {
+                [void][System.Runtime.InteropServices.Marshal]::ReleaseComObject($comObject)
+            }
+        }
+    }
+}
+
+function Get-LatestShortcutTarget {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Directory,
+        [string[]]$PreferredNamePatterns = @()
+    )
+
+    $shortcuts = Get-ChildItem -LiteralPath $Directory -File -Filter "*.lnk" |
+        Sort-Object LastWriteTime -Descending
+
+    $orderedShortcuts = @()
+
+    if ($PreferredNamePatterns.Count -gt 0) {
+        $preferredShortcuts = @(
+            foreach ($shortcut in $shortcuts) {
+                foreach ($pattern in $PreferredNamePatterns) {
+                    if ($shortcut.Name -like $pattern) {
+                        $shortcut
+                        break
+                    }
+                }
+            }
+        )
+
+        $preferredShortcutPaths = @($preferredShortcuts | ForEach-Object { $_.FullName })
+        $orderedShortcuts += $preferredShortcuts
+        $orderedShortcuts += $shortcuts | Where-Object { $preferredShortcutPaths -notcontains $_.FullName }
+    }
+    else {
+        $orderedShortcuts = $shortcuts
+    }
+
+    foreach ($shortcut in $orderedShortcuts) {
+        $targetPath = Resolve-ShortcutTarget -Path $shortcut.FullName
+        if ($targetPath -and [System.IO.Path]::GetExtension($targetPath).ToLowerInvariant() -eq ".xlsx") {
+            return $targetPath
+        }
+    }
+
+    return $null
 }
 
 function Find-HeaderMap {
@@ -128,9 +198,20 @@ $amountKey = Decode-Utf8Base64 "6YeR6aGN"
 $unitKey = Decode-Utf8Base64 "5Y+X6LSI5Zau5L2N"
 $purposeKey = Decode-Utf8Base64 "5oyH5a6a55So6YCU"
 $requiredHeaders = @($dateKey, $nameKey, $amountKey, $unitKey, $purposeKey)
+$preferredShortcutPatterns = @(
+    "*{0}*.lnk" -f (Decode-Utf8Base64 "5ZCI5L215qqU5qGI"),
+    "*{0}*.lnk" -f (Decode-Utf8Base64 "5qiC5o2Q57aT"),
+    "*{0}*.lnk" -f (Decode-Utf8Base64 "5o2Q5qy+")
+)
 
 if (-not $ExcelPath) {
-    $ExcelPath = Get-LatestExcelFile -Directory $PSScriptRoot
+    $shortcutTarget = Get-LatestShortcutTarget -Directory $ExcelDirectory -PreferredNamePatterns $preferredShortcutPatterns
+    if ($shortcutTarget -and (Test-Path -LiteralPath $shortcutTarget)) {
+        $ExcelPath = $shortcutTarget
+    }
+    else {
+        $ExcelPath = Get-LatestExcelFile -Directory $ExcelDirectory
+    }
 }
 
 if (-not (Test-Path -LiteralPath $ExcelPath)) {
