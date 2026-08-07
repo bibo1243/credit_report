@@ -47,6 +47,37 @@ function Get-LatestExcelFile {
     return $file.FullName
 }
 
+function Get-ExistingDirectories {
+    param(
+        [string[]]$Directories
+    )
+
+    return @(
+        $Directories |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+            Select-Object -Unique |
+            Where-Object { Test-Path -LiteralPath $_ -PathType Container }
+    )
+}
+
+function Get-PreferredExcelPath {
+    param(
+        [string[]]$Directories,
+        [string[]]$PreferredNames
+    )
+
+    foreach ($directory in (Get-ExistingDirectories -Directories $Directories)) {
+        foreach ($preferredName in $PreferredNames) {
+            $candidate = Join-Path $directory $preferredName
+            if (Test-Path -LiteralPath $candidate -PathType Leaf) {
+                return $candidate
+            }
+        }
+    }
+
+    return $null
+}
+
 function Resolve-ShortcutTarget {
     param(
         [Parameter(Mandatory = $true)]
@@ -182,14 +213,39 @@ $quantityKey = Decode-Utf8Base64 "5pW46YeP"
 $unitKey = Decode-Utf8Base64 "5Zau5L2N"
 $recipientKey = Decode-Utf8Base64 "5Y+X6LSI5Zau5L2N"
 $requiredHeaders = @($dateKey, $nameKey, $itemKey, $quantityKey, $unitKey, $recipientKey)
+$preferredExcelNames = @(
+    Decode-Utf8Base64 "54mp5ZOB5b615L+hLnhsc3g="
+)
+$searchDirectories = @(
+    $PSScriptRoot,
+    $ExcelDirectory,
+    "E:\AI",
+    "C:\Users\feeling\Desktop",
+    "C:\Users\feeling\OneDrive - tkcy\AI"
+)
 
 if (-not $ExcelPath) {
-    $shortcutTarget = Get-LatestShortcutTarget -Directory $ExcelDirectory
-    if ($shortcutTarget -and (Test-Path -LiteralPath $shortcutTarget)) {
-        $ExcelPath = $shortcutTarget
+    $ExcelPath = Get-PreferredExcelPath -Directories $searchDirectories -PreferredNames $preferredExcelNames
+
+    if (-not $ExcelPath) {
+        foreach ($directory in (Get-ExistingDirectories -Directories $searchDirectories)) {
+            $shortcutTarget = Get-LatestShortcutTarget -Directory $directory
+            if ($shortcutTarget -and (Test-Path -LiteralPath $shortcutTarget)) {
+                $ExcelPath = $shortcutTarget
+                break
+            }
+        }
     }
-    else {
-        $ExcelPath = Get-LatestExcelFile -Directory $ExcelDirectory
+
+    if (-not $ExcelPath) {
+        foreach ($directory in (Get-ExistingDirectories -Directories $searchDirectories)) {
+            try {
+                $ExcelPath = Get-LatestExcelFile -Directory $directory
+                break
+            }
+            catch {
+            }
+        }
     }
 }
 
