@@ -1,6 +1,6 @@
 param(
     [string]$ExcelPath,
-    [string]$ExcelDirectory = "E:\OneDrive - tkcy\AI",
+    [string]$ExcelDirectory = "E:\AI",
     [string]$JsonPath = (Join-Path $PSScriptRoot "goods.json"),
     [string]$JsPath = (Join-Path $PSScriptRoot "goods-data.js")
 )
@@ -217,9 +217,9 @@ $preferredExcelNames = @(
     Decode-Utf8Base64 "54mp5ZOB5b615L+hLnhsc3g="
 )
 $searchDirectories = @(
-    $PSScriptRoot,
     $ExcelDirectory,
     "E:\AI",
+    $PSScriptRoot,
     "C:\Users\feeling\Desktop",
     "C:\Users\feeling\OneDrive - tkcy\AI"
 )
